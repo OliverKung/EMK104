@@ -527,7 +527,7 @@ uchar findFnKey()
 }
 /***/
 
-void Macro1_Act(int model)
+void Macro1_Act()
 {
 	
 }

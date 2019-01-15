@@ -1,0 +1,743 @@
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          /***/
+   2          /*This is a code that for hotmap scan function test,run at 2400bps@12.000Mbps
+   3          and we try to make it possible for hotmap function*/
+   4          /***/
+   5          #include <reg52.h>
+   6          #include <intrins.h>
+   7          //#include <Scan.c>
+   8          
+   9          /***/
+  10          #define uint unsigned int
+  11          #define uchar unsigned char
+  12          /***/
+  13          #define KeyPort1 P0
+  14          #define KeyPort2 P1
+  15          #define KeyPort3 P2
+  16          sbit row5 = P0^0;
+  17          sbit row6 = P0^1;
+  18          sbit row7 = P0^2;
+  19          sbit row8 = P0^3;
+  20          sbit row9 = P0^4;
+  21          sbit row10 = P0^5;
+  22          sbit row11 = P0^6;
+  23          sbit row12 = P0^7;
+  24          sbit row13 = P2^7;
+  25          sbit row14 = P2^6;
+  26          
+  27          sbit col15 = P1^6;
+  28          sbit col16 = P1^5;
+  29          sbit col17 = P1^4;
+  30          sbit col18 = P1^3;
+  31          sbit col19 = P1^2;
+  32          sbit col20 = P1^1;
+  33          sbit col21 = P1^0;
+  34          sbit col22 = P2^0;
+  35          sbit col23 = P2^1;
+  36          sbit col24 = P2^2;
+  37          sbit col25 = P2^3;
+  38          sbit col26 = P2^4;
+  39          sbit col27 = P2^5;
+  40          
+  41          /***/
+  42          #define Fn 233
+  43          #define WinL 234
+  44          #define CtrlL 235
+  45          #define CtrlR 236
+  46          #define AltL 237
+  47          #define AltR 238
+  48          #define ShiftL 239
+  49          #define ShiftR 240
+  50          #define Macro1 241
+  51          #define Macro2 242
+  52          #define Macro3 243
+  53          #define Macro4 244
+  54          #define Macro5 245 
+  55          #define Menu 118
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 2   
+
+  56          uchar hotMap[51]={0},hotMapX[51]={0};
+  57          uchar code keyMap[101]=
+  58          {
+  59                  0,86,79,92,87,81,88,4,90,//PgDn,Num.,Num7,Num+,Num0,NumEnt,A,Num5
+  60                  83,85,97,86,96,49,98,64,9,93,//Home,PgUp,Num*,Num-,Num/,\,Num1,F7,F,Num8
+  61                  20,35,22,18,40,25,42,67,47,63,//Q,6,S,O,Enter,V,BS,F10,[,F6
+  62                  5,43,76,37,7,28,54,23,57,32,//B,Tab,Del,8,D,Y,<,T,Caps,3
+  63                  27,16,11,15,56,59,58,21,65,//X,M,H,L,/,F2,F1,R,F8
+  64                  68,38,13,39,48,73,8,30,55,61,//F11,9,J,0,],Insert,E,1,>,F4
+  65                  34,41,14,45,52,69,26,31,51,46,//5,ESC,K,-,",F12,W,2,:,+
+  66                  53,Macro3,33,Macro4,24,Macro5,17,80,36,66,//~,Up,4,Down,U,Left,N,Right,7,F9
+  67                  84,82,99,91,94,Fn,12,95,//End,Num2,Num3.Num6,Num9,Fn,I,NumLock
+  68                  WinL,29,10,//Win_L,Z,G
+  69                  CtrlL,Macro2,60,6,//CtrlL,CtrlR,F3,C
+  70                  AltL,Menu,19,62,//AltL,AltR,P,F5
+  71                  ShiftL,ShiftR,89,44//ShiftL,ShiftR,Num4,Space
+  72                  };
+  73          uchar code keyMapOriginal[101]=
+  74          {
+  75                  0,78,99,95,87,98,88,4,93,//PgDn,Num.,Num7,Num+,Num0,NumEnt,A,Num5
+  76                  74,75,85,86,84,49,89,64,9,96,//Home,PgUp,Num*,Num-,Num/,\,Num1,F7,F,Num8
+  77                  20,35,22,18,40,25,42,67,47,63,//Q,6,S,O,Enter,V,BS,F10,[,F6
+  78                  5,43,76,37,7,28,54,23,57,32,//B,Tab,Del,8,D,Y,<,T,Caps,3
+  79                  27,16,11,15,56,59,58,21,65,//X,M,H,L,/,F2,F1,R,F8
+  80                  68,38,13,39,48,73,8,30,55,61,//F11,9,J,0,],Insert,E,1,>,F4
+  81                  34,41,14,45,52,69,26,31,51,46,//5,ESC,K,-,",F12,W,2,:,+
+  82                  53,82,33,81,24,80,17,79,36,66,//~,Up,4,Down,U,Left,N,Right,7,F9
+  83                  77,90,91,94,97,Fn,12,83,//End,Num2,Num3.Num6,Num9,Fn,I,NumLock
+  84                  WinL,29,10,//Win_L,Z,G
+  85                  CtrlL,CtrlR,60,6,//CtrlL,CtrlR,F3,C
+  86                  AltL,AltR,19,62,//AltL,AltR,P,F5
+  87                  ShiftL,ShiftR,92,44//ShiftL,ShiftR,Num4,Space
+  88                  };
+  89          uchar code shiftkeyMap[101]=
+  90          {
+  91                  0,78,99,95,87,98,88,4,93,//PgDn,Num.,Num7,Num+,Num0,NumEnt,A,Num5
+  92                  74,75,85,86,84,49,89,64,9,96,//Home,PgUp,Num*,Num-,Num/,\,Num1,F7,F,Num8
+  93                  20,35,22,18,40,25,42,67,47,63,//Q,6,S,O,Enter,V,BS,F10,[,F6
+  94                  5,43,76,37,7,28,54,23,57,32,//B,Tab,Del,8,D,Y,<,T,Caps,3
+  95                  27,16,11,15,56,59,58,21,65,//X,M,H,L,/,F2,F1,R,F8
+  96                  68,38,13,39,48,73,8,30,55,61,//F11,9,J,0,],Insert,E,1,>,F4
+  97                  34,41,14,45,52,69,26,31,51,46,//5,ESC,K,-,",F12,W,2,:,+
+  98                  53,82,33,81,24,80,17,79,36,66,//~,Up,4,Down,U,Left,N,Right,7,F9
+  99                  77,90,91,94,97,Fn,12,83,//End,Num2,Num3.Num6,Num9,Fn,I,NumLock
+ 100                  WinL,29,10,//Win_L,Z,G
+ 101                  CtrlL,CtrlR,60,6,//CtrlL,CtrlR,F3,C
+ 102                  AltL,AltR,19,62,//AltL,AltR,P,F5
+ 103                  ShiftL,ShiftR,92,44//ShiftL,ShiftR,Num4,Space
+ 104          };
+ 105          /***/
+ 106          
+ 107          /***/
+ 108          uchar Buffer[8]={0};
+ 109          /***/
+ 110          void delay10ms(void)//actually delay2ms
+ 111          {
+ 112   1          unsigned char a,b;
+ 113   1          for(b=4;b>0;b--)
+ 114   1              for(a=248;a>0;a--);
+ 115   1          _nop_();  //if Keil,require use intrins.h
+ 116   1      }
+ 117          /***/
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 3   
+
+ 118          
+ 119          /***/
+ 120          void delay1ms(uchar timeX)   //误差 -0.651041666667us
+ 121          {
+ 122   1          unsigned char a,b;
+ 123   1              for(timeX;timeX>0;timeX--)
+ 124   1                      for(b=102;b>0;b--)
+ 125   1                              for(a=3;a>0;a--);
+ 126   1      }
+ 127          /***/
+ 128          
+ 129          /***/
+ 130          void delay10_Sendms(void)   //误差 -0.000000000002us
+ 131          {
+ 132   1          unsigned char a,b;
+ 133   1          for(b=249;b>0;b--)
+ 134   1              for(a=17;a>0;a--);
+ 135   1      }
+ 136          /***/
+ 137          void delay1s(void)   //delta=-0.000000000227us
+ 138          {
+ 139   1          unsigned char a,b,c;
+ 140   1          for(c=13;c>0;c--)
+ 141   1              for(b=247;b>0;b--)
+ 142   1                  for(a=142;a>0;a--);
+ 143   1          _nop_();  //if Keil,require use intrins.h
+ 144   1      }
+ 145          /***/
+ 146          void KeyScan()
+ 147          {
+ 148   1              P0 = 0xFF;
+ 149   1              P1 = 0xFF;
+ 150   1              P2 = 0xFF;
+ 151   1              col27 = 0;
+ 152   1              if(P0!=0xFF||row13!=1||row14!=1)
+ 153   1              {
+ 154   2                      P0 = 0xFF;
+ 155   2                      P1 = 0xFF;
+ 156   2                      P2 = 0xFF;
+ 157   2                      col27 = 0;
+ 158   2                      delay10ms();
+ 159   2                      if(P0!=0xFF||row13!=1||row14!=1)
+ 160   2                      {
+ 161   3                              if(row5==0);
+ 162   3                              if(row6==0)hotMap[1]=1;
+ 163   3                              if(row7==0)hotMap[2]=1;
+ 164   3                              if(row8==0)hotMap[3]=1;
+ 165   3                              if(row9==0)hotMap[4]=1;
+ 166   3                              if(row10==0);
+ 167   3                              if(row11==0)hotMap[5]=1;
+ 168   3                              if(row12==0)hotMap[6]=1;
+ 169   3                              if(row13==0)hotMap[7]=1;
+ 170   3                              if(row14==0)hotMap[8]=1;
+ 171   3                      }
+ 172   2              }
+ 173   1              P0 = 0xFF;
+ 174   1              P1 = 0xFF;
+ 175   1              P2 = 0xFF;
+ 176   1              col26 = 0;
+ 177   1              if(P0!=0xFF||row13!=1||row14!=1)
+ 178   1              {
+ 179   2                      P0 = 0xFF;
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 4   
+
+ 180   2                      P1 = 0xFF;
+ 181   2                      P2 = 0xFF;
+ 182   2                      col26 = 0;
+ 183   2                      delay10ms();
+ 184   2                      if(P0!=0xFF||row13!=1||row14!=1)
+ 185   2                      {
+ 186   3                              if(row5==0)hotMap[9]=1;
+ 187   3                              if(row6==0)hotMap[10]=1;
+ 188   3                              if(row7==0)hotMap[11]=1;
+ 189   3                              if(row8==0)hotMap[12]=1;
+ 190   3                              if(row9==0)hotMap[13]=1;
+ 191   3                              if(row10==0)hotMap[14]=1;
+ 192   3                              if(row11==0)hotMap[15]=1;
+ 193   3                              if(row12==0)hotMap[16]=1;
+ 194   3                              if(row13==0)hotMap[17]=1;
+ 195   3                              if(row14==0)hotMap[18]=1;
+ 196   3                      }
+ 197   2              }
+ 198   1              P0 = 0xFF;
+ 199   1              P1 = 0xFF;
+ 200   1              P2 = 0xFF;
+ 201   1              col25 = 0;
+ 202   1              if(P0!=0xFF||row13!=1||row14!=1)
+ 203   1              {
+ 204   2                      P0 = 0xFF;
+ 205   2                      P1 = 0xFF;
+ 206   2                      P2 = 0xFF;
+ 207   2                      col25 = 0;
+ 208   2                      delay10ms();
+ 209   2                      if(P0!=0xFF||row13!=1||row14!=1)
+ 210   2                      {
+ 211   3                              if(row5==0)hotMap[19]=1;
+ 212   3                              if(row6==0)hotMap[20]=1;
+ 213   3                              if(row7==0)hotMap[21]=1;
+ 214   3                              if(row8==0)hotMap[22]=1;
+ 215   3                              if(row9==0)hotMap[23]=1;
+ 216   3                              if(row10==0)hotMap[24]=1;
+ 217   3                              if(row11==0)hotMap[25]=1;
+ 218   3                              if(row12==0)hotMap[26]=1;
+ 219   3                              if(row13==0)hotMap[27]=1;
+ 220   3                              if(row14==0)hotMap[28]=1;
+ 221   3                      }
+ 222   2              }
+ 223   1              P0 = 0xFF;
+ 224   1              P1 = 0xFF;
+ 225   1              P2 = 0xFF;
+ 226   1              col24 = 0;
+ 227   1              if(P0!=0xFF||row13!=1||row14!=1)
+ 228   1              {
+ 229   2                      P0 = 0xFF;
+ 230   2                      P1 = 0xFF;
+ 231   2                      P2 = 0xFF;
+ 232   2                      col24 = 0;
+ 233   2                      delay10ms();
+ 234   2                      if(P0!=0xFF||row13!=1||row14!=1)
+ 235   2                      {
+ 236   3                              if(row5==0)hotMap[29]=1;
+ 237   3                              if(row6==0)hotMap[30]=1;
+ 238   3                              if(row7==0)hotMap[31]=1;
+ 239   3                              if(row8==0)hotMap[32]=1;
+ 240   3                              if(row9==0)hotMap[33]=1;
+ 241   3                              if(row10==0)hotMap[34]=1;
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 5   
+
+ 242   3                              if(row11==0)hotMap[35]=1;
+ 243   3                              if(row12==0)hotMap[36]=1;
+ 244   3                              if(row13==0)hotMap[37]=1;
+ 245   3                              if(row14==0)hotMap[38]=1;
+ 246   3                      }
+ 247   2              }
+ 248   1              P0 = 0xFF;
+ 249   1              P1 = 0xFF;
+ 250   1              P2 = 0xFF;
+ 251   1              col23 = 0;
+ 252   1              if(P0!=0xFF||row13!=1||row14!=1)
+ 253   1              {
+ 254   2                      P0 = 0xFF;
+ 255   2                      P1 = 0xFF;
+ 256   2                      P2 = 0xFF;
+ 257   2                      col23 = 0;
+ 258   2                      delay10ms();
+ 259   2                      if(P0!=0xFF||row13!=1||row14!=1)
+ 260   2                      {
+ 261   3                              if(row5==0)hotMap[39]=1;
+ 262   3                              if(row6==0)hotMap[40]=1;
+ 263   3                              if(row7==0)hotMap[41]=1;
+ 264   3                              if(row8==0);
+ 265   3                              if(row9==0)hotMap[42]=1;
+ 266   3                              if(row10==0)hotMap[43]=1;
+ 267   3                              if(row11==0)hotMap[44]=1;
+ 268   3                              if(row12==0)hotMap[45]=1;
+ 269   3                              if(row13==0)hotMap[46]=1;
+ 270   3                              if(row14==0)hotMap[47]=1;
+ 271   3                      }
+ 272   2              }
+ 273   1              P0 = 0xFF;
+ 274   1              P1 = 0xFF;
+ 275   1              P2 = 0xFF;
+ 276   1              col22 = 0;
+ 277   1              if(P0!=0xFF||row13!=1||row14!=1)
+ 278   1              {
+ 279   2                      P0 = 0xFF;
+ 280   2                      P1 = 0xFF;
+ 281   2                      P2 = 0xFF;
+ 282   2                      col22 = 0;
+ 283   2                      delay10ms();
+ 284   2                      if(P0!=0xFF||row13!=1||row14!=1)
+ 285   2                      {
+ 286   3                              if(row5==0)hotMap[48]=1;
+ 287   3                              if(row6==0)hotMap[49]=1;
+ 288   3                              if(row7==0)hotMap[50]=1;
+ 289   3                              if(row8==0)hotMapX[1]=1;
+ 290   3                              if(row9==0)hotMapX[2]=1;
+ 291   3                              if(row10==0)hotMapX[3]=1;
+ 292   3                              if(row11==0)hotMapX[4]=1;
+ 293   3                              if(row12==0)hotMapX[5]=1;
+ 294   3                              if(row13==0)hotMapX[6]=1;
+ 295   3                              if(row14==0)hotMapX[7]=1;
+ 296   3                      }
+ 297   2              }
+ 298   1              P0 = 0xFF;
+ 299   1              P1 = 0xFF;
+ 300   1              P2 = 0xFF;
+ 301   1              col21 = 0;
+ 302   1              if(P0!=0xFF||row13!=1||row14!=1)
+ 303   1              {
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 6   
+
+ 304   2                      P0 = 0xFF;
+ 305   2                      P1 = 0xFF;
+ 306   2                      P2 = 0xFF;
+ 307   2                      col21 = 0;
+ 308   2                      delay10ms();
+ 309   2                      if(P0!=0xFF||row13!=1||row14!=1)
+ 310   2                      {
+ 311   3                              if(row5==0)hotMapX[8]=1;
+ 312   3                              if(row6==0)hotMapX[9]=1;
+ 313   3                              if(row7==0)hotMapX[10]=1;
+ 314   3                              if(row8==0)hotMapX[11]=1;
+ 315   3                              if(row9==0)hotMapX[12]=1;
+ 316   3                              if(row10==0)hotMapX[13]=1;
+ 317   3                              if(row11==0)hotMapX[14]=1;
+ 318   3                              if(row12==0)hotMapX[15]=1;
+ 319   3                              if(row13==0)hotMapX[16]=1;
+ 320   3                              if(row14==0)hotMapX[17]=1;
+ 321   3                      }
+ 322   2              }
+ 323   1              P0 = 0xFF;
+ 324   1              P1 = 0xFF;
+ 325   1              P2 = 0xFF;
+ 326   1              col20 = 0;
+ 327   1              if(P0!=0xFF||row13!=1||row14!=1)
+ 328   1              {
+ 329   2                      P0 = 0xFF;
+ 330   2                      P1 = 0xFF;
+ 331   2                      P2 = 0xFF;
+ 332   2                      col20 = 0;
+ 333   2                      delay10ms();
+ 334   2                      if(P0!=0xFF||row13!=1||row14!=1)
+ 335   2                      {
+ 336   3                              if(row5==0)hotMapX[18]=1;
+ 337   3                              if(row6==0)hotMapX[19]=1;
+ 338   3                              if(row7==0)hotMapX[20]=1;
+ 339   3                              if(row8==0)hotMapX[21]=1;
+ 340   3                              if(row9==0)hotMapX[22]=1;
+ 341   3                              if(row10==0)hotMapX[23]=1;
+ 342   3                              if(row11==0)hotMapX[24]=1;
+ 343   3                              if(row12==0)hotMapX[25]=1;
+ 344   3                              if(row13==0)hotMapX[26]=1;
+ 345   3                              if(row14==0)hotMapX[27]=1;
+ 346   3                      }
+ 347   2              }
+ 348   1              P0 = 0xFF;
+ 349   1              P1 = 0xFF;
+ 350   1              P2 = 0xFF;
+ 351   1              col19 = 0;
+ 352   1              if(P0!=0xFF||row13!=1||row14!=1)
+ 353   1              {
+ 354   2                      P0 = 0xFF;
+ 355   2                      P1 = 0xFF;
+ 356   2                      P2 = 0xFF;
+ 357   2                      col19 = 0;
+ 358   2                      delay10ms();
+ 359   2                      if(P0!=0xFF||row13!=1||row14!=1)
+ 360   2                      {
+ 361   3                              if(row5==0)hotMapX[28]=1;
+ 362   3                              if(row6==0)hotMapX[29]=1;
+ 363   3                              if(row7==0)hotMapX[30]=1;
+ 364   3                              if(row8==0)hotMapX[31]=1;
+ 365   3                              if(row9==0)hotMapX[32]=1;
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 7   
+
+ 366   3                              if(row10==0);
+ 367   3                              if(row11==0);
+ 368   3                              if(row12==0)hotMapX[33]=1;
+ 369   3                              if(row13==0)hotMapX[34]=1;
+ 370   3                              if(row14==0)hotMapX[35]=1;
+ 371   3                      }
+ 372   2              }
+ 373   1                      P0 = 0xFF;
+ 374   1              P1 = 0xFF;
+ 375   1              P2 = 0xFF;
+ 376   1              col18 = 0;
+ 377   1              if(P0!=0xFF||row13!=1||row14!=1)
+ 378   1              {
+ 379   2                      P0 = 0xFF;
+ 380   2                      P1 = 0xFF;
+ 381   2                      P2 = 0xFF;
+ 382   2                      col18 = 0;
+ 383   2                      delay10ms();
+ 384   2                      if(P0!=0xFF||row13!=1||row14!=1)
+ 385   2                      {
+ 386   3                              if(row5==0);
+ 387   3                              if(row6==0);
+ 388   3                              if(row7==0);
+ 389   3                              if(row8==0);
+ 390   3                              if(row9==0);
+ 391   3                              if(row10==0);
+ 392   3                              if(row11==0)hotMapX[36]=1;
+ 393   3                              if(row12==0);
+ 394   3                              if(row13==0)hotMapX[37]=1;
+ 395   3                              if(row14==0)hotMapX[38]=1;
+ 396   3                      }
+ 397   2              }
+ 398   1              P0 = 0xFF;
+ 399   1              P1 = 0xFF;
+ 400   1              P2 = 0xFF;
+ 401   1              col17 = 0;
+ 402   1              if(P0!=0xFF||row13!=1||row14!=1)
+ 403   1              {
+ 404   2                      P0 = 0xFF;
+ 405   2                      P1 = 0xFF;
+ 406   2                      P2 = 0xFF;
+ 407   2                      col17 = 0;
+ 408   2                      delay10ms();
+ 409   2                      if(P0!=0xFF||row13!=1||row14!=1)
+ 410   2                      {
+ 411   3                              if(row5==0);
+ 412   3                              if(row6==0);
+ 413   3                              if(row7==0);
+ 414   3                              if(row8==0);
+ 415   3                              if(row9==0)hotMapX[39]=1;
+ 416   3                              if(row10==0)hotMap[40]=1;
+ 417   3                              if(row11==0);
+ 418   3                              if(row12==0);
+ 419   3                              if(row13==0)hotMapX[41]=1;
+ 420   3                              if(row14==0)hotMapX[42]=1;
+ 421   3                      }
+ 422   2              }
+ 423   1              P0 = 0xFF;
+ 424   1              P1 = 0xFF;
+ 425   1              P2 = 0xFF;
+ 426   1              col16 = 0;
+ 427   1              if(P0!=0xFF||row13!=1||row14!=1)
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 8   
+
+ 428   1              {
+ 429   2                      P0 = 0xFF;
+ 430   2                      P1 = 0xFF;
+ 431   2                      P2 = 0xFF;
+ 432   2                      col16 = 0;
+ 433   2                      delay10ms();
+ 434   2                      if(P0!=0xFF||row13!=1||row14!=1)
+ 435   2                      {
+ 436   3                              if(row5==0);
+ 437   3                              if(row6==0);
+ 438   3                              if(row7==0)hotMapX[43]=1;
+ 439   3                              if(row8==0)hotMapX[44]=1;
+ 440   3                              if(row9==0);
+ 441   3                              if(row10==0);
+ 442   3                              if(row11==0);
+ 443   3                              if(row12==0);
+ 444   3                              if(row13==0)hotMapX[45]=1;
+ 445   3                              if(row14==0)hotMapX[46]=1;
+ 446   3                      }
+ 447   2              }
+ 448   1              P0 = 0xFF;
+ 449   1              P1 = 0xFF;
+ 450   1              P2 = 0xFF;
+ 451   1              col15 = 0;
+ 452   1              if(P0!=0xFF||row13!=1||row14!=1)
+ 453   1              {
+ 454   2                      P0 = 0xFF;
+ 455   2                      P1 = 0xFF;
+ 456   2                      P2 = 0xFF;
+ 457   2                      col15 = 0;
+ 458   2                      delay10ms();
+ 459   2                      if(P0!=0xFF||row13!=1||row14!=1)
+ 460   2                      {
+ 461   3                              if(row5==0)hotMapX[47]=1;
+ 462   3                              if(row6==0)hotMapX[48]=1;
+ 463   3                              if(row7==0);
+ 464   3                              if(row8==0);
+ 465   3                              if(row9==0);
+ 466   3                              if(row10==0);
+ 467   3                              if(row11==0);
+ 468   3                              if(row12==0);
+ 469   3                              if(row13==0)hotMapX[49]=1;
+ 470   3                              if(row14==0)hotMapX[50]=1;
+ 471   3                      }
+ 472   2              }
+ 473   1      }
+ 474          /***/
+ 475          void hotMapClear()
+ 476          {
+ 477   1              uchar i=0;
+ 478   1              for(i=0;i<51;i++)
+ 479   1                      {
+ 480   2                  hotMap[i]=0;
+ 481   2                  hotMapX[i]=0;
+ 482   2              }
+ 483   1              for(i=0;i<8;i++)Buffer[i]=0;
+ 484   1      }
+ 485          /***/
+ 486          void InitUART(void)//Init UART 9600bps@11.0592MHz
+ 487          {
+ 488   1          TMOD = 0x20;
+ 489   1          SCON = 0x40;
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 9   
+
+ 490   1          TH1 = 0xFD;
+ 491   1          TL1 = TH1;
+ 492   1          PCON = 0x00;
+ 493   1          TR1 = 1;
+ 494   1      }
+ 495          /***/
+ 496          
+ 497          /***/
+ 498          void SendOneByte(unsigned char c)//Send one byte at UART Serial
+ 499          {
+ 500   1          SBUF = c;
+ 501   1          while(!TI);
+ 502   1          TI = 0;
+ 503   1      }
+ 504          /***/
+ 505          
+ 506          /***/
+ 507          void SendOneArray(uchar *sendBuffer)
+ 508          {
+ 509   1              uchar i=0;
+ 510   1              for(i=0;i<8;i++)
+ 511   1              {
+ 512   2                      SendOneByte(sendBuffer[i]);
+ 513   2              }
+ 514   1              delay10ms();
+ 515   1      }
+ 516          /***/
+ 517          
+ 518          /***/
+ 519          uchar findFnKey()
+ 520          {
+ 521   1              uchar i=0;
+ 522   1              for(i=0;i<=100;i++)
+ 523   1              {
+ 524   2                      if(keyMap[i]==Fn)return i;
+ 525   2              }
+ 526   1              return 0;
+ 527   1      }
+ 528          /***/
+ 529          
+ 530          void Macro1_Act()
+ 531          {
+ 532   1              
+ 533   1      }
+ 534          void Macro2_Act()
+ 535          {
+ 536   1              
+ 537   1      }
+ 538          void Macro3_Act()
+ 539          {
+ 540   1              
+ 541   1      }
+ 542          void Macro4_Act()
+ 543          {
+ 544   1              
+ 545   1      }
+ 546          void Macro5_Act()
+ 547          {
+ 548   1              
+ 549   1      }
+ 550          void main()
+ 551          {
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 10  
+
+ 552   1          uchar i=0,j=0,FnPosition=0;
+ 553   1              delay1s();
+ 554   1          InitUART();
+ 555   1              hotMapClear();
+ 556   1              FnPosition=findFnKey();
+ 557   1          while(1)
+ 558   1          {
+ 559   2              hotMapClear();
+ 560   2                      KeyScan();
+ 561   2              //delay10ms();
+ 562   2                      if(hotMap[FnPosition]==0)
+ 563   2              {
+ 564   3                              for(i=0;i<51;i++)
+ 565   3                              {
+ 566   4                                      if(hotMap[i]!=0)
+ 567   4                                      {       
+ 568   5                                              switch(keyMap[i])
+ 569   5                                              {
+ 570   6                                                      case WinL: Buffer[0]=Buffer[0]|0x08; break;
+ 571   6                                                      case CtrlL: Buffer[0]=Buffer[0]|0x01; break;
+ 572   6                                                      case CtrlR: Buffer[0]=Buffer[0]|0x10; break;
+ 573   6                                                      case AltL: Buffer[0]=Buffer[0]|0x04; break;
+ 574   6                                                      case AltR: Buffer[0]=Buffer[0]|0x40; break;
+ 575   6                                                      case ShiftL: Buffer[0]=Buffer[0]|0x02; break;
+ 576   6                                                      case ShiftR: Buffer[0]=Buffer[0]|0x20; break;
+ 577   6                                                      case Macro1: Macro1_Act(); goto end; break;
+ 578   6                                                      case Macro2: Macro2_Act(); goto end; break;
+ 579   6                                                      case Macro3: Macro3_Act(); goto end; break;
+ 580   6                                                      case Macro4: Macro4_Act(); goto end; break;
+ 581   6                                                      case Macro5: Macro5_Act(); goto end; break;
+ 582   6                                                      default:
+ 583   6                                                              if(Buffer[7]!=0)goto Send;
+ 584   6                                                              for(j=2;j<8;j++)
+ 585   6                                                              {
+ 586   7                                                                      if(Buffer[j]==0)
+ 587   7                                                                      {
+ 588   8                                                                              Buffer[j]=keyMap[i];
+ 589   8                                                                              break;
+ 590   8                                                                      }
+ 591   7                                                              }
+ 592   6                                                      break;  
+ 593   6                                              }
+ 594   5                                      }
+ 595   4                                      //delay10ms();
+ 596   4                                      if(hotMapX[i]!=0)
+ 597   4                                      {
+ 598   5                                              switch(keyMap[i+50])
+ 599   5                                              {
+ 600   6                                                      case WinL: Buffer[0]=Buffer[0]|0x08; break;
+ 601   6                                                      case CtrlL: Buffer[0]=Buffer[0]|0x01; break;
+ 602   6                                                      case CtrlR: Buffer[0]=Buffer[0]|0x10; break;
+ 603   6                                                      case AltL: Buffer[0]=Buffer[0]|0x04; break;
+ 604   6                                                      case AltR: Buffer[0]=Buffer[0]|0x40; break;
+ 605   6                                                      case ShiftL: Buffer[0]=Buffer[0]|0x02; break;
+ 606   6                                                      case ShiftR: Buffer[0]=Buffer[0]|0x20; break;
+ 607   6                                                      case Macro1: Macro1_Act(); goto end; break;
+ 608   6                                                      case Macro2: Macro2_Act(); goto end; break;
+ 609   6                                                      case Macro3: Macro3_Act(); goto end; break;
+ 610   6                                                      case Macro4: Macro4_Act(); goto end; break;
+ 611   6                                                      case Macro5: Macro5_Act(); goto end; break;
+ 612   6                                                      default:
+ 613   6                                                              if(Buffer[7]!=0)goto Send;
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 11  
+
+ 614   6                                                              for(j=2;j<8;j++)
+ 615   6                                                              {
+ 616   7                                                                      if(Buffer[j]==0)
+ 617   7                                                                      {
+ 618   8                                                                              Buffer[j]=keyMap[i+50];
+ 619   8                                                                              break;
+ 620   8                                                                      }
+ 621   7                                                              }
+ 622   6                                                      break;  
+ 623   6                                              }
+ 624   5                                      }
+ 625   4                              }
+ 626   3                      }
+ 627   2                      else
+ 628   2                      {
+ 629   3                              for(i=0;i<51;i++)
+ 630   3                              {
+ 631   4                                      if(hotMap[i]!=0)
+ 632   4                                      {       
+ 633   5                                              switch(keyMap[i])
+ 634   5                                              {
+ 635   6                                                      case WinL: Buffer[0]=Buffer[0]|0x08; break;
+ 636   6                                                      case CtrlL: Buffer[0]=Buffer[0]|0x01; break;
+ 637   6                                                      case CtrlR: Buffer[0]=Buffer[0]|0x10; break;
+ 638   6                                                      case AltL: Buffer[0]=Buffer[0]|0x04; break;
+ 639   6                                                      case AltR: Buffer[0]=Buffer[0]|0x40; break;
+ 640   6                                                      case ShiftL: Buffer[0]=Buffer[0]|0x02; break;
+ 641   6                                                      case ShiftR: Buffer[0]=Buffer[0]|0x20; break;
+ 642   6                                                      case Macro1: Macro1_Act(); goto end; break;
+ 643   6                                                      case Macro2: Macro2_Act(); goto end; break;
+ 644   6                                                      case Macro3: Macro3_Act(); goto end; break;
+ 645   6                                                      case Macro4: Macro4_Act(); goto end; break;
+ 646   6                                                      case Macro5: Macro5_Act(); goto end; break;
+ 647   6                                                      default:
+ 648   6                                                              if(Buffer[7]!=0)goto Send;
+ 649   6                                                              for(j=2;j<8;j++)
+ 650   6                                                              {
+ 651   7                                                                      if(Buffer[j]==0)
+ 652   7                                                                      {
+ 653   8                                                                              Buffer[j]=shiftkeyMap[i];
+ 654   8                                                                              break;
+ 655   8                                                                      }
+ 656   7                                                              }
+ 657   6                                                      break;  
+ 658   6                                              }
+ 659   5                                      }
+ 660   4                                      //delay10ms();
+ 661   4                                      if(hotMapX[i]!=0)
+ 662   4                                      {
+ 663   5                                              switch(keyMap[i+50])
+ 664   5                                              {
+ 665   6                                                      case WinL: Buffer[0]=Buffer[0]|0x08; break;
+ 666   6                                                      case CtrlL: Buffer[0]=Buffer[0]|0x01; break;
+ 667   6                                                      case CtrlR: Buffer[0]=Buffer[0]|0x10; break;
+ 668   6                                                      case AltL: Buffer[0]=Buffer[0]|0x04; break;
+ 669   6                                                      case AltR: Buffer[0]=Buffer[0]|0x40; break;
+ 670   6                                                      case ShiftL: Buffer[0]=Buffer[0]|0x02; break;
+ 671   6                                                      case ShiftR: Buffer[0]=Buffer[0]|0x20; break;
+ 672   6                                                      case Macro1: Macro1_Act(); goto end; break;
+ 673   6                                                      case Macro2: Macro2_Act(); goto end; break;
+ 674   6                                                      case Macro3: Macro3_Act(); goto end; break;
+ 675   6                                                      case Macro4: Macro4_Act(); goto end; break;
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 12  
+
+ 676   6                                                      case Macro5: Macro5_Act(); goto end; break;
+ 677   6                                                      default:
+ 678   6                                                              if(Buffer[7]!=0)goto Send;
+ 679   6                                                              for(j=2;j<8;j++)
+ 680   6                                                              {
+ 681   7                                                                      if(Buffer[j]==0)
+ 682   7                                                                      {
+ 683   8                                                                              Buffer[j]=shiftkeyMap[i+50];
+ 684   8                                                                              break;
+ 685   8                                                                      }
+ 686   7                                                              }
+ 687   6                                                      break;  
+ 688   6                                              }
+ 689   5                                      }
+ 690   4                              }
+ 691   3                      }
+ 692   2                      end:
+ 693   2              Send:
+ 694   2                      //Buffer[0]=0x10;
+ 695   2                      SendOneArray(Buffer);
+ 696   2              hotMapClear();
+ 697   2          }
+ 698   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2097    ----
+   CONSTANT SIZE    =    303    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =    110       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
