@@ -1,4 +1,4 @@
-C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 1   
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 13:35:09 PAGE 1   
 
 
 C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   53          #define Macro4 244
   54          #define Macro5 245 
   55          #define Menu 118
-C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 2   
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 13:35:09 PAGE 2   
 
   56          uchar hotMap[51]={0},hotMapX[51]={0};
   57          uchar code keyMap[101]=
@@ -103,13 +103,13 @@ line level    source
   92                  74,75,85,86,84,49,89,64,9,96,//Home,PgUp,Num*,Num-,Num/,\,Num1,F7,F,Num8
   93                  20,35,22,18,40,25,42,67,47,63,//Q,6,S,O,Enter,V,BS,F10,[,F6
   94                  5,43,76,37,7,28,54,23,57,32,//B,Tab,Del,8,D,Y,<,T,Caps,3
-  95                  27,16,11,15,56,59,58,21,65,//X,M,H,L,/,F2,F1,R,F8
+  95                  27,16,11,15,56,129,127,21,65,//X,M,H,L,/,F2,F1,R,F8
   96                  68,38,13,39,48,73,8,30,55,61,//F11,9,J,0,],Insert,E,1,>,F4
   97                  34,41,14,45,52,69,26,31,51,46,//5,ESC,K,-,",F12,W,2,:,+
   98                  53,82,33,81,24,80,17,79,36,66,//~,Up,4,Down,U,Left,N,Right,7,F9
   99                  77,90,91,94,97,Fn,12,83,//End,Num2,Num3.Num6,Num9,Fn,I,NumLock
  100                  WinL,29,10,//Win_L,Z,G
- 101                  CtrlL,CtrlR,60,6,//CtrlL,CtrlR,F3,C
+ 101                  CtrlL,CtrlR,128,6,//CtrlL,CtrlR,F3,C
  102                  AltL,AltR,19,62,//AltL,AltR,P,F5
  103                  ShiftL,ShiftR,92,44//ShiftL,ShiftR,Num4,Space
  104          };
@@ -126,7 +126,7 @@ line level    source
  115   1          _nop_();  //if Keil,require use intrins.h
  116   1      }
  117          /***/
-C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 3   
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 13:35:09 PAGE 3   
 
  118          
  119          /***/
@@ -190,7 +190,7 @@ line level    source
  177   1              if(P0!=0xFF||row13!=1||row14!=1)
  178   1              {
  179   2                      P0 = 0xFF;
-C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 4   
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 13:35:09 PAGE 4   
 
  180   2                      P1 = 0xFF;
  181   2                      P2 = 0xFF;
@@ -254,7 +254,7 @@ line level    source
  239   3                              if(row8==0)hotMap[32]=1;
  240   3                              if(row9==0)hotMap[33]=1;
  241   3                              if(row10==0)hotMap[34]=1;
-C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 5   
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 13:35:09 PAGE 5   
 
  242   3                              if(row11==0)hotMap[35]=1;
  243   3                              if(row12==0)hotMap[36]=1;
@@ -318,7 +318,7 @@ line level    source
  301   1              col21 = 0;
  302   1              if(P0!=0xFF||row13!=1||row14!=1)
  303   1              {
-C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 6   
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 13:35:09 PAGE 6   
 
  304   2                      P0 = 0xFF;
  305   2                      P1 = 0xFF;
@@ -382,7 +382,7 @@ line level    source
  363   3                              if(row7==0)hotMapX[30]=1;
  364   3                              if(row8==0)hotMapX[31]=1;
  365   3                              if(row9==0)hotMapX[32]=1;
-C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 7   
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 13:35:09 PAGE 7   
 
  366   3                              if(row10==0);
  367   3                              if(row11==0);
@@ -446,7 +446,7 @@ line level    source
  425   1              P2 = 0xFF;
  426   1              col16 = 0;
  427   1              if(P0!=0xFF||row13!=1||row14!=1)
-C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 8   
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 13:35:09 PAGE 8   
 
  428   1              {
  429   2                      P0 = 0xFF;
@@ -510,7 +510,7 @@ line level    source
  487          {
  488   1          TMOD = 0x20;
  489   1          SCON = 0x40;
-C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 9   
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 13:35:09 PAGE 9   
 
  490   1          TH1 = 0xFD;
  491   1          TL1 = TH1;
@@ -574,7 +574,7 @@ line level    source
  549   1      }
  550          void main()
  551          {
-C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 10  
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 13:35:09 PAGE 10  
 
  552   1          uchar i=0,j=0,FnPosition=0;
  553   1              delay1s();
@@ -586,11 +586,11 @@ line level    source
  559   2              hotMapClear();
  560   2                      KeyScan();
  561   2              //delay10ms();
- 562   2                      if(hotMap[FnPosition]==0)
+ 562   2                      if(hotMapX[FnPosition-50]==0)
  563   2              {
  564   3                              for(i=0;i<51;i++)
  565   3                              {
- 566   4                                      if(hotMap[i]!=0)
+ 566   4                                      if(hotMap[i]!=0&&shiftkeyMap[i]!=Fn)
  567   4                                      {       
  568   5                                              switch(keyMap[i])
  569   5                                              {
@@ -620,7 +620,7 @@ line level    source
  593   6                                              }
  594   5                                      }
  595   4                                      //delay10ms();
- 596   4                                      if(hotMapX[i]!=0)
+ 596   4                                      if(hotMapX[i]!=0&&shiftkeyMap[i+50]!=Fn)
  597   4                                      {
  598   5                                              switch(keyMap[i+50])
  599   5                                              {
@@ -638,7 +638,7 @@ line level    source
  611   6                                                      case Macro5: Macro5_Act(); goto end; break;
  612   6                                                      default:
  613   6                                                              if(Buffer[7]!=0)goto Send;
-C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 11  
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 13:35:09 PAGE 11  
 
  614   6                                                              for(j=2;j<8;j++)
  615   6                                                              {
@@ -657,7 +657,7 @@ line level    source
  628   2                      {
  629   3                              for(i=0;i<51;i++)
  630   3                              {
- 631   4                                      if(hotMap[i]!=0)
+ 631   4                                      if(hotMap[i]!=0&&shiftkeyMap[i]!=Fn)
  632   4                                      {       
  633   5                                              switch(keyMap[i])
  634   5                                              {
@@ -687,7 +687,7 @@ line level    source
  658   6                                              }
  659   5                                      }
  660   4                                      //delay10ms();
- 661   4                                      if(hotMapX[i]!=0)
+ 661   4                                      if(hotMapX[i]!=0&&shiftkeyMap[i+50]!=Fn)
  662   4                                      {
  663   5                                              switch(keyMap[i+50])
  664   5                                              {
@@ -702,7 +702,7 @@ line level    source
  673   6                                                      case Macro2: Macro2_Act(); goto end; break;
  674   6                                                      case Macro3: Macro3_Act(); goto end; break;
  675   6                                                      case Macro4: Macro4_Act(); goto end; break;
-C51 COMPILER V9.01   MAIN                                                                  01/15/2019 12:47:29 PAGE 12  
+C51 COMPILER V9.01   MAIN                                                                  01/15/2019 13:35:09 PAGE 12  
 
  676   6                                                      case Macro5: Macro5_Act(); goto end; break;
  677   6                                                      default:
@@ -730,7 +730,7 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   2097    ----
+   CODE SIZE        =   2149    ----
    CONSTANT SIZE    =    303    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----

@@ -92,13 +92,13 @@ uchar code shiftkeyMap[101]=
 	74,75,85,86,84,49,89,64,9,96,//Home,PgUp,Num*,Num-,Num/,\,Num1,F7,F,Num8
 	20,35,22,18,40,25,42,67,47,63,//Q,6,S,O,Enter,V,BS,F10,[,F6
 	5,43,76,37,7,28,54,23,57,32,//B,Tab,Del,8,D,Y,<,T,Caps,3
-	27,16,11,15,56,59,58,21,65,//X,M,H,L,/,F2,F1,R,F8
+	27,16,11,15,56,129,127,21,65,//X,M,H,L,/,F2,F1,R,F8
 	68,38,13,39,48,73,8,30,55,61,//F11,9,J,0,],Insert,E,1,>,F4
 	34,41,14,45,52,69,26,31,51,46,//5,ESC,K,-,",F12,W,2,:,+
 	53,82,33,81,24,80,17,79,36,66,//~,Up,4,Down,U,Left,N,Right,7,F9
 	77,90,91,94,97,Fn,12,83,//End,Num2,Num3.Num6,Num9,Fn,I,NumLock
 	WinL,29,10,//Win_L,Z,G
-	CtrlL,CtrlR,60,6,//CtrlL,CtrlR,F3,C
+	CtrlL,CtrlR,128,6,//CtrlL,CtrlR,F3,C
 	AltL,AltR,19,62,//AltL,AltR,P,F5
 	ShiftL,ShiftR,92,44//ShiftL,ShiftR,Num4,Space
 };
@@ -559,11 +559,11 @@ void main()
         hotMapClear();
 		KeyScan();
         //delay10ms();
-		if(hotMap[FnPosition]==0)
+		if(hotMapX[FnPosition-50]==0)
         {
 			for(i=0;i<51;i++)
 			{
-				if(hotMap[i]!=0)
+				if(hotMap[i]!=0&&shiftkeyMap[i]!=Fn)
 				{	
 					switch(keyMap[i])
 					{
@@ -593,7 +593,7 @@ void main()
 					}
 				}
 				//delay10ms();
-				if(hotMapX[i]!=0)
+				if(hotMapX[i]!=0&&shiftkeyMap[i+50]!=Fn)
 				{
 					switch(keyMap[i+50])
 					{
@@ -628,7 +628,7 @@ void main()
 		{
 			for(i=0;i<51;i++)
 			{
-				if(hotMap[i]!=0)
+				if(hotMap[i]!=0&&shiftkeyMap[i]!=Fn)
 				{	
 					switch(keyMap[i])
 					{
@@ -658,7 +658,7 @@ void main()
 					}
 				}
 				//delay10ms();
-				if(hotMapX[i]!=0)
+				if(hotMapX[i]!=0&&shiftkeyMap[i+50]!=Fn)
 				{
 					switch(keyMap[i+50])
 					{
