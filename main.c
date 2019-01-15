@@ -522,45 +522,10 @@ uchar findFnKey()
 	return 0;
 }
 /***/
-/*void KeyMapCustom()
-{
-	//here you should turn this keymap into what you want it to be
-	//keyMap[75]=80;
-	//keyMap[]
-	//well,I find that since we use the code to store the keyMap,so we can't change it during the processing....
-}*/
+
 void Macro1_Act(int model)
 {
-	/*
-	uchar act[20]={0},//you should add the action you wannna macro to act
-	actFn[20]={0},
-	actDelay[20]={0},
-	num=0,//the action num you wanna to act
-	macroBuffer[8]={0};
-	i=0; 
-	switch(model)
-	{
-		case 1://without anti-check white noise
-			for(i=0;i<num;i++)
-			{
-				switch(actFn[i])
-				{
-					case WinL:   macroBuffer[0]=macroBuffer[0]|0x08; break;
-					case CtrlL:  macroBuffer[0]=macroBuffer[0]|0x01; break;
-					case CtrlR:  macroBuffer[0]=macroBuffer[0]|0x10; break;
-					case AltL:   macroBuffer[0]=macroBuffer[0]|0x04; break;
-					case AltR:   macroBuffer[0]=macroBuffer[0]|0x40; break;
-					case ShiftL: macroBuffer[0]=macroBuffer[0]|0x02; break;
-					case ShiftR: macroBuffer[0]=macroBuffer[0]|0x20; break;
-				}
-				macroBuffer[2]=act[i];
-				SendOneArray(macroBuffer);
-				macroBuffer[0]=0;
-				macroBuffer[2]=0;
-			}
-		break;
-	}
-	*/
+	
 }
 void Macro2_Act()
 {
