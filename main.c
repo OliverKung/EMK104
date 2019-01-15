@@ -52,8 +52,10 @@ sbit col27 = P2^5;
 #define Macro3 243
 #define Macro4 244
 #define Macro5 245 
+#define Menu 118
 uchar hotMap[51]={0},hotMapX[51]={0};
-uchar code keyMap[101]={
+uchar code keyMap[101]=
+{
 	0,86,79,92,87,81,88,4,90,//PgDn,Num.,Num7,Num+,Num0,NumEnt,A,Num5
 	83,85,97,86,96,49,98,64,9,93,//Home,PgUp,Num*,Num-,Num/,\,Num1,F7,F,Num8
 	20,35,22,18,40,25,42,67,47,63,//Q,6,S,O,Enter,V,BS,F10,[,F6
@@ -62,13 +64,14 @@ uchar code keyMap[101]={
 	68,38,13,39,48,73,8,30,55,61,//F11,9,J,0,],Insert,E,1,>,F4
 	34,41,14,45,52,69,26,31,51,46,//5,ESC,K,-,",F12,W,2,:,+
 	53,Macro3,33,Macro4,24,Macro5,17,80,36,66,//~,Up,4,Down,U,Left,N,Right,7,F9
-	84,82,99,91,94,Macro1,12,95,//End,Num2,Num3.Num6,Num9,Fn,I,NumLock
+	84,82,99,91,94,Fn,12,95,//End,Num2,Num3.Num6,Num9,Fn,I,NumLock
 	WinL,29,10,//Win_L,Z,G
 	CtrlL,Macro2,60,6,//CtrlL,CtrlR,F3,C
-	AltL,Fn,19,62,//AltL,AltR,P,F5
+	AltL,Menu,19,62,//AltL,AltR,P,F5
 	ShiftL,ShiftR,89,44//ShiftL,ShiftR,Num4,Space
 	};
-uchar code keyMapOriginal[101]={
+uchar code keyMapOriginal[101]=
+{
 	0,78,99,95,87,98,88,4,93,//PgDn,Num.,Num7,Num+,Num0,NumEnt,A,Num5
 	74,75,85,86,84,49,89,64,9,96,//Home,PgUp,Num*,Num-,Num/,\,Num1,F7,F,Num8
 	20,35,22,18,40,25,42,67,47,63,//Q,6,S,O,Enter,V,BS,F10,[,F6
@@ -83,7 +86,8 @@ uchar code keyMapOriginal[101]={
 	AltL,AltR,19,62,//AltL,AltR,P,F5
 	ShiftL,ShiftR,92,44//ShiftL,ShiftR,Num4,Space
 	};
-uchar code shiftkeyMap[101]={
+uchar code shiftkeyMap[101]=
+{
 	0,78,99,95,87,98,88,4,93,//PgDn,Num.,Num7,Num+,Num0,NumEnt,A,Num5
 	74,75,85,86,84,49,89,64,9,96,//Home,PgUp,Num*,Num-,Num/,\,Num1,F7,F,Num8
 	20,35,22,18,40,25,42,67,47,63,//Q,6,S,O,Enter,V,BS,F10,[,F6
